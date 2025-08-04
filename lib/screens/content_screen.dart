@@ -1,4 +1,3 @@
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
@@ -52,7 +51,9 @@ class _ContentScreenState extends State<ContentScreen> {
         .eq('current_lesson', widget.lesson);
     if (mounted) {
       setState(() {
-        rewords = response.map<String>((e) => e['word'].toString().toLowerCase()).toList();
+        rewords = response
+            .map<String>((e) => e['word'].toString().toLowerCase())
+            .toList();
       });
     }
   }
@@ -65,7 +66,9 @@ class _ContentScreenState extends State<ContentScreen> {
         .eq('lesson', widget.lesson);
     if (mounted) {
       setState(() {
-        lessonWords = response.map<String>((e) => e['word'].toString().toLowerCase()).toList();
+        lessonWords = response
+            .map<String>((e) => e['word'].toString().toLowerCase())
+            .toList();
       });
     }
   }
@@ -75,7 +78,11 @@ class _ContentScreenState extends State<ContentScreen> {
       final results = await Future.wait<dynamic>([
         supabase.from('z_stories').select().eq('id', widget.storyId).single(),
         supabase.from('z_qestions').select().eq('story_id', widget.storyId),
-        supabase.from('z_words_all').select('word').eq('level', widget.level).eq('lesson', widget.lesson),
+        supabase
+            .from('z_words_all')
+            .select('word')
+            .eq('level', widget.level)
+            .eq('lesson', widget.lesson),
       ]);
 
       final storyData = results[0] as Map<String, dynamic>;
@@ -106,7 +113,8 @@ class _ContentScreenState extends State<ContentScreen> {
         if (snapshot.hasError) {
           return Scaffold(
             appBar: AppBar(title: const Text('خطأ')),
-            body: Center(child: Text('خطأ في تحميل المحتوى: ${snapshot.error}')),
+            body:
+                Center(child: Text('خطأ في تحميل المحتوى: ${snapshot.error}')),
           );
         }
 
@@ -130,7 +138,9 @@ class _ContentScreenState extends State<ContentScreen> {
                 tabs: [
                   Tab(icon: Icon(Icons.menu_book), text: 'القصة'),
                   Tab(icon: Icon(Icons.edit), text: 'أسئلة كتابية'),
-                  Tab(icon: Icon(Icons.check_circle_outline), text: 'أسئلة اختيارية'),
+                  Tab(
+                      icon: Icon(Icons.check_circle_outline),
+                      text: 'أسئلة اختيارية'),
                   Tab(icon: Icon(Icons.list_alt), text: 'كلمات الدرس'),
                 ],
               ),
@@ -158,11 +168,33 @@ class _ContentScreenState extends State<ContentScreen> {
                                   onPressed: () => _speakSlow(content.storyEn),
                                   child: const Text("تشغيل ببطء"),
                                 ),
+                                const SizedBox(width: 10),
+                                ElevatedButton(
+                                  onPressed: _stopSpeaking,
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.red),
+                                  child: const Text("إيقاف"),
+                                ),
                               ],
                             ),
+
+                            // Row(
+                            //   children: [
+                            //     ElevatedButton(
+                            //       onPressed: () => _speak(content.storyEn),
+                            //       child: const Text("تشغيل القصة"),
+                            //     ),
+                            //     const SizedBox(width: 10),
+                            //     ElevatedButton(
+                            //       onPressed: () => _speakSlow(content.storyEn),
+                            //       child: const Text("تشغيل ببطء"),
+                            //     ),
+                            //   ],
+                            // ),
                             const SizedBox(height: 10),
                             RichText(
-                              text: _buildHighlightedText( // <-- ستعمل هذه الدالة الآن بشكل صحيح
+                              text: _buildHighlightedText(
+                                // <-- ستعمل هذه الدالة الآن بشكل صحيح
                                 content.storyEn,
                                 lessonWords,
                                 Theme.of(context).textTheme.bodyLarge!,
@@ -175,7 +207,8 @@ class _ContentScreenState extends State<ContentScreen> {
                       _buildSectionCard(
                         context,
                         'الترجمة',
-                        Text(content.storyAr, style: Theme.of(context).textTheme.bodyLarge),
+                        Text(content.storyAr,
+                            style: Theme.of(context).textTheme.bodyLarge),
                       ),
                     ],
                   ),
@@ -183,12 +216,14 @@ class _ContentScreenState extends State<ContentScreen> {
                 ListView.builder(
                   padding: const EdgeInsets.all(8.0),
                   itemCount: writingQuestions.length,
-                  itemBuilder: (context, index) => WritingQuizCard(questionData: writingQuestions[index]),
+                  itemBuilder: (context, index) =>
+                      WritingQuizCard(questionData: writingQuestions[index]),
                 ),
                 ListView.builder(
                   padding: const EdgeInsets.all(8.0),
                   itemCount: mcqQuestions.length,
-                  itemBuilder: (context, index) => MultipleChoiceQuizCard(questionData: mcqQuestions[index]),
+                  itemBuilder: (context, index) =>
+                      MultipleChoiceQuizCard(questionData: mcqQuestions[index]),
                 ),
                 ListView.builder(
                   padding: const EdgeInsets.all(8.0),
@@ -220,7 +255,10 @@ class _ContentScreenState extends State<ContentScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor)),
+            Text(title,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).primaryColor)),
             const Divider(height: 20),
             SizedBox(width: double.infinity, child: child),
           ],
@@ -230,7 +268,8 @@ class _ContentScreenState extends State<ContentScreen> {
   }
 
   // ✅ الدالة المعدلة لجعل كل الكلمات قابلة للتحديد
-  TextSpan _buildHighlightedText(String text, List<String> blueWords, TextStyle defaultStyle) {
+  TextSpan _buildHighlightedText(
+      String text, List<String> blueWords, TextStyle defaultStyle) {
     final spans = <TextSpan>[];
     final wordRegex = RegExp(r"[a-zA-Z]+");
 
@@ -246,9 +285,11 @@ class _ContentScreenState extends State<ContentScreen> {
 
       TextStyle style;
       if (blueWords.contains(lowerCaseWord)) {
-        style = defaultStyle.copyWith(color: Colors.blue, fontWeight: FontWeight.bold);
+        style = defaultStyle.copyWith(
+            color: Colors.blue, fontWeight: FontWeight.bold);
       } else if (rewords.contains(lowerCaseWord)) {
-        style = defaultStyle.copyWith(color: Colors.green, fontWeight: FontWeight.bold);
+        style = defaultStyle.copyWith(
+            color: Colors.green, fontWeight: FontWeight.bold);
       } else {
         style = defaultStyle;
       }
@@ -268,14 +309,16 @@ class _ContentScreenState extends State<ContentScreen> {
     }
 
     if (lastMatchEnd < text.length) {
-      spans.add(TextSpan(text: text.substring(lastMatchEnd), style: defaultStyle));
+      spans.add(
+          TextSpan(text: text.substring(lastMatchEnd), style: defaultStyle));
     }
 
     return TextSpan(children: spans);
   }
 
   void _showWordOptions(String word) async {
-    final translation = await _translateWord(word); // <-- سيتم استدعاء دالة الترجمة الجديدة
+    final translation =
+        await _translateWord(word); // <-- سيتم استدعاء دالة الترجمة الجديدة
     if (!mounted) return;
     showDialog(
       context: context,
@@ -287,11 +330,17 @@ class _ContentScreenState extends State<ContentScreen> {
           children: [
             Text("الترجمة: $translation"),
             const SizedBox(height: 10),
-            ElevatedButton(onPressed: () => _speak(word), child: const Text("تشغيل الصوت")),
+            ElevatedButton(
+                onPressed: () => _speak(word),
+                child: const Text("تشغيل الصوت")),
             const SizedBox(height: 10),
-            ElevatedButton(onPressed: () => _speakSlow(word), child: const Text("تشغيل صوت بطيء")),
+            ElevatedButton(
+                onPressed: () => _speakSlow(word),
+                child: const Text("تشغيل صوت بطيء")),
             const SizedBox(height: 10),
-            ElevatedButton(onPressed: () => _addWordToDatabase(word), child: const Text("إضافة إلى كلمات الدرس")),
+            ElevatedButton(
+                onPressed: () => _addWordToDatabase(word),
+                child: const Text("إضافة إلى كلمات الدرس")),
           ],
         ),
       ),
@@ -314,82 +363,98 @@ class _ContentScreenState extends State<ContentScreen> {
   //   await tts.setSpeechRate(0.5);
   //   await tts.speak(word);
   // }
-Future<void> _speak(String fullText) async {
-  await tts.setSpeechRate(0.5);
+  Future<void> _speak(String fullText) async {
+    await tts.setSpeechRate(0.5);
 
-  List<String> sentences = fullText.split(RegExp(r'(?<=[.!?])\s+'));
+    List<String> sentences = fullText.split(RegExp(r'(?<=[.!?])\s+'));
 
-  for (int i = 0; i < sentences.length; i++) {
-    String sentence = sentences[i].trim();
-    if (sentence.isEmpty) continue;
+    for (int i = 0; i < sentences.length; i++) {
+      String sentence = sentences[i].trim();
+      if (sentence.isEmpty) continue;
 
-    // التبديل بين صوت رجل وامرأة
-    if (i % 2 == 0) {
-      await tts.setVoice({'name': 'Microsoft Mark - English (United States)', 'locale': 'en-US'});
-    } else {
-      await tts.setVoice({'name': 'Microsoft Zira - English (United States)', 'locale': 'en-US'});
+      // التبديل بين صوت رجل وامرأة
+      if (i % 2 == 0) {
+        await tts.setVoice({
+          'name': 'Microsoft Mark - English (United States)',
+          'locale': 'en-US'
+        });
+      } else {
+        await tts.setVoice({
+          'name': 'Microsoft Zira - English (United States)',
+          'locale': 'en-US'
+        });
+      }
+
+      await tts.speak(sentence);
+      await _waitForSpeechCompletion();
     }
-
-    await tts.speak(sentence);
-    await _waitForSpeechCompletion();
   }
-}
-Future<void> _speakSlow(String fullText) async {
-  await tts.setSpeechRate(0.3);
 
-  List<String> sentences = fullText.split(RegExp(r'(?<=[.!?])\s+'));
+  Future<void> _speakSlow(String fullText) async {
+    await tts.setSpeechRate(0.3);
 
-  for (int i = 0; i < sentences.length; i++) {
-    String sentence = sentences[i].trim();
-    if (sentence.isEmpty) continue;
+    List<String> sentences = fullText.split(RegExp(r'(?<=[.!?])\s+'));
 
-    // التبديل بين صوت رجل وامرأة
-    if (i % 2 == 0) {
-      await tts.setVoice({'name': 'Microsoft Mark - English (United States)', 'locale': 'en-US'});
-    } else {
-      await tts.setVoice({'name': 'Microsoft Zira - English (United States)', 'locale': 'en-US'});
+    for (int i = 0; i < sentences.length; i++) {
+      String sentence = sentences[i].trim();
+      if (sentence.isEmpty) continue;
+
+      // التبديل بين صوت رجل وامرأة
+      if (i % 2 == 0) {
+        await tts.setVoice({
+          'name': 'Microsoft Mark - English (United States)',
+          'locale': 'en-US'
+        });
+      } else {
+        await tts.setVoice({
+          'name': 'Microsoft Zira - English (United States)',
+          'locale': 'en-US'
+        });
+      }
+
+      await tts.speak(sentence);
+      await _waitForSpeechCompletion();
     }
-
-    await tts.speak(sentence);
-    await _waitForSpeechCompletion();
   }
-}
-Future<void> _waitForSpeechCompletion() async {
-  bool isSpeaking = true;
 
-  tts.setCompletionHandler(() {
-    isSpeaking = false;
-  });
+  Future<void> _waitForSpeechCompletion() async {
+    bool isSpeaking = true;
 
-  while (isSpeaking) {
-    await Future.delayed(const Duration(milliseconds: 100));
+    tts.setCompletionHandler(() {
+      isSpeaking = false;
+    });
+
+    while (isSpeaking) {
+      await Future.delayed(const Duration(milliseconds: 100));
+    }
   }
-}
 
-Future<void> printAvailableVoices() async {
-  var voices = await tts.getVoices;
-  for (var voice in voices) {
-    print(voice);
+  Future<void> printAvailableVoices() async {
+    var voices = await tts.getVoices;
+    for (var voice in voices) {
+      print(voice);
+    }
   }
-}
 
+  Future<void> _stopSpeaking() async {
+    await tts.stop();
+  }
 
   // Future<void> _speakSlow(String word) async {
   //   await tts.setSpeechRate(0.3);
   //   await tts.speak(word);
   // }
 // هذا الكود متوافق فقط مع الإصدار القديم 1.0.0
-Future<String> _translateWord(String word) async {
-  // لاحظ أننا ننشئ كائنًا جديدًا من المترجم أولاً
-  final translator = GoogleTranslator(); 
+  Future<String> _translateWord(String word) async {
+    // لاحظ أننا ننشئ كائنًا جديدًا من المترجم أولاً
+    final translator = GoogleTranslator();
 
-  try {
-    var translation = await translator.translate(word, from: 'en', to: 'ar');
-    return translation.text;
-  } catch (e) {
-    print("Translation Error: $e");
-    return "فشل في الترجمة";
+    try {
+      var translation = await translator.translate(word, from: 'en', to: 'ar');
+      return translation.text;
+    } catch (e) {
+      print("Translation Error: $e");
+      return "فشل في الترجمة";
+    }
   }
-}
-
 }
