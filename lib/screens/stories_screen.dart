@@ -90,11 +90,16 @@ class _StoriesScreenState extends State<StoriesScreen> {
     final storyInsert = await supabase
         .from('z_stories')
         .insert({
-          'story_en': data['story_en'],
-          'story_ar': data['story_ar'],
-          'story_title': data['story_title'],
-          'lesson': widget.lesson,
-          'level':widget.level
+             // تم التعديل هنا
+        'story_content': jsonEncode(data['story_content']), // نحول القائمة إلى نص JSON
+        'story_title': data['story_title'],
+        'lesson': widget.lesson,
+        'level': widget.level
+          // 'story_en': data['story_en'],
+          // 'story_ar': data['story_ar'],
+          // 'story_title': data['story_title'],
+          // 'lesson': widget.lesson,
+          // 'level':widget.level
         })
         .select()
         .single();
