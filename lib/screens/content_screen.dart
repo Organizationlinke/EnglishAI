@@ -1667,7 +1667,7 @@ class _ContentScreenState extends State<ContentScreen> {
       isSpeakingNormal = true;
       isSpeakingSlow = false;
     });
-    await tts.setSpeechRate(0.5); // Normal speed
+    await tts.setSpeechRate(1); // Normal speed
 
     for (int i = 0; i < sentences.length; i++) {
       if (_isCancelled) break;
@@ -1676,11 +1676,11 @@ class _ContentScreenState extends State<ContentScreen> {
       final sentence = sentences[i].en.trim();
       if (sentence.isEmpty) continue;
 
-      if (i % 2 == 0 && _maleVoice != null) {
-        await tts.setVoice({'name': _maleVoice!, 'locale': 'en-US'});
-      } else if (_femaleVoice != null) {
-        await tts.setVoice({'name': _femaleVoice!, 'locale': 'en-US'});
-      }
+      // if (i % 2 == 0 && _maleVoice != null) {
+        await tts.setVoice({'name': 'en-us-x-sfg#male_1-local', 'locale': 'en-US'});
+      // } else if (_femaleVoice != null) {
+      //   await tts.setVoice({'name': _femaleVoice!, 'locale': 'en-US'});
+      // }
 
       await tts.speak(sentence);
       await _waitForSpeechCompletion();
@@ -1695,7 +1695,7 @@ class _ContentScreenState extends State<ContentScreen> {
       isSpeakingNormal = false;
       isSpeakingSlow = true;
     });
-    await tts.setSpeechRate(0.25); // Slower speed
+    await tts.setSpeechRate(0.5); // Slower speed
 
     for (int i = 0; i < sentences.length; i++) {
       if (_isCancelled) break;
