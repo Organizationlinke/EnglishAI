@@ -1713,7 +1713,7 @@ class _ContentScreenState extends State<ContentScreen> {
   }
 
   Future<void> _speakSingleWord(String word) async {
-    await tts.setSpeechRate(0.4); // A good speed for single words
+    await tts.setSpeechRate(1); // A good speed for single words
     await tts.speak(word);
   }
 
